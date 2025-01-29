@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,17 +23,30 @@ fun MobileMoneyDepositScreen() {
     var totalDeposit by remember { mutableStateOf(0.0) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     val providers = listOf("Moov Money", "Mixx by Yas")
+    val maxAmount = when (selectedProvider) {
+        "Moov Money" -> 2000000.0
+        "Mixx by Yas" -> 200000.0
+        else -> 100000.0
+    }
 
     // Fonction pour calculer les frais et la somme totale à déposer
-    fun calculateFeesAndTotal(amount: String, provider: String): Pair<Double, Double> {
+    fun calculateFees(amount: String, provider: String): Pair<Double, Double> {
+        val amountAsDouble = amount.toDoubleOrNull() ?: 0.0
+        if (amountAsDouble > maxAmount) {
+            errorMessage = "Le montant maximum autorisé pour $selectedProvider est ${maxAmount.toInt()} F CFA."
+            return Pair(0.0, 0.0)
+        } else {
+            errorMessage = ""
+        }
+
         val fees = when (provider) {
             "Moov Money" -> FeesCalculator.calculateMoovFees(amount)
-        //    "Mixx by Yas" -> FeesCalculator.calculateMTNDepositFees(amount)
+            "Mixx by Yas" -> FeesCalculator.calculateMixxFees(amount)
             else -> 0.0
         }
-        val amountAsDouble = amount.toDoubleOrNull() ?: 0.0
         return Pair(fees, amountAsDouble + fees)
     }
 
@@ -47,8 +61,27 @@ fun MobileMoneyDepositScreen() {
             label = { Text("Montant du dépôt") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp)
+                .padding(vertical = 10.dp),
+            isError = errorMessage.isNotEmpty(),
+            trailingIcon = {
+                if (depositAmount.isNotEmpty()) {
+                    IconButton(onClick = { depositAmount = "" }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Effacer le champs"
+                        )
+                    }
+                }
+            }
         )
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+            )
+        }
 
         ExposedDropdownMenuBox(
             expanded = isDropdownExpanded,
@@ -89,10 +122,12 @@ fun MobileMoneyDepositScreen() {
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
-            val (fees, total) = calculateFeesAndTotal(depositAmount, selectedProvider)
+            val (fees, total) = calculateFees(depositAmount, selectedProvider)
             calculatedFees = fees
             totalDeposit = total
-            isDialogVisible = true // Affiche le popup
+            if (errorMessage.isEmpty()) {
+                isDialogVisible = true // Affiche le popup
+            }
         }) {
             Text("Calculer les frais")
         }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.EcoCalc.SplashScreen" parent="Theme.SplashScreen">
+        <!-- Définir le fond d'écran du splash screen -->
+        <item name="windowSplashScreenBackground">@color/purple_500</item>
+
+        <!-- Définir l'icône animée ou l'icône de l'écran de démarrage -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+
+        <!-- Définir la durée de l'animation de l'icône -->
+        <item name="windowSplashScreenAnimationDuration">200</item>
+
+        <!-- Définir le thème de l'activité qui suit directement l'écran de démarrage -->
+        <item name="postSplashScreenTheme">@style/Theme.EcoCalc</item>
+    </style>
+
+
+</resources>

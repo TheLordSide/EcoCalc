@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 fun WithdrawalScreen() {
     var withdrawalAmount by remember { mutableStateOf("") }
     var selectedBank by remember { mutableStateOf("Ecobank") }
-    var calculatedFees by remember { mutableStateOf(0.0) }
+    var calculatedFees by remember { mutableDoubleStateOf(0.0) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
 

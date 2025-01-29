@@ -12,7 +12,7 @@ import com.ecocalc.tg.ui.theme.EcoCalcTheme
 @Composable
 fun BankFeeCalculatorScreen(modifier: Modifier = Modifier) {
     var currentTab by remember { mutableStateOf(0) } // 0 pour dépôt, 1 pour retrait
-    val tabs = listOf("Dépôt", "Retrait")
+    val tabs = listOf("Dépôt")
 
     Scaffold(
         topBar = {
@@ -28,24 +28,9 @@ fun BankFeeCalculatorScreen(modifier: Modifier = Modifier) {
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // Tabs
-            TabRow(selectedTabIndex = currentTab) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = currentTab == index,
-                        onClick = { currentTab = index },
-                        text = { Text(title) }
-                    )
-                }
-            }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Affichage du contenu en fonction de l'onglet sélectionné
-            when (currentTab) {
-                0 -> DepositScreen()
-                1 -> WithdrawalScreen()
-            }
+            DepositScreen()
         }
     }
 }

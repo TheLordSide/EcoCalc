@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,13 +22,27 @@ fun MobileMoneyWithdrawalScreen() {
     var calculatedFees by remember { mutableStateOf(0.0) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
-
+    var errorMessage by remember { mutableStateOf("") }
     val providers = listOf("Moov Money", "Mixx by Yas")
+
+    val maxAmount = when (selectedProvider) {
+        "Moov Money" -> 2000000.0
+        "Mixx by Yas" -> 200000.0
+        else -> 100000.0
+    }
 
     // Calcul des frais basé sur le fournisseur sélectionné
     fun calculateFees(amount: String, provider: String): Double {
+        val amountAsDouble = amount.toDoubleOrNull() ?: 0.0
+        if (amountAsDouble > maxAmount) {
+            errorMessage = "Le montant maximum autorisé pour $selectedProvider est ${maxAmount.toInt()} F CFA."
+            return 0.0
+        } else {
+            errorMessage = ""
+        }
         return when (provider) {
             "Moov Money" -> FeesCalculator.calculateMoovFees(amount)
+            "Mixx by Yas" -> FeesCalculator.calculateMixxFees(amount)
             else -> 0.0
         }
     }
@@ -43,8 +58,27 @@ fun MobileMoneyWithdrawalScreen() {
             label = { Text("Montant du retrait") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp)
+                .padding(vertical = 10.dp),
+            isError = errorMessage.isNotEmpty(),
+            trailingIcon = {
+                if (withdrawalAmount.isNotEmpty()) {
+                    IconButton(onClick = { withdrawalAmount = "" }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Effacer le champs"
+                        )
+                    }
+                }
+            }
         )
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+            )
+        }
 
         ExposedDropdownMenuBox(
             expanded = isDropdownExpanded,
@@ -86,7 +120,9 @@ fun MobileMoneyWithdrawalScreen() {
 
         Button(onClick = {
             calculatedFees = calculateFees(withdrawalAmount, selectedProvider)
-            isDialogVisible = true
+            if (errorMessage.isEmpty()) {
+                isDialogVisible = true
+            }
         }) {
             Text("Calculer les frais")
         }
