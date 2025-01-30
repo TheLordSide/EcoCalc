@@ -135,7 +135,8 @@ fun MobileMoneyWithdrawalScreen() {
                 title = { Text("Résultat") },
                 text = {
                     if (calculatedFees > 0.0) {
-                        Text("Frais pour $selectedProvider : ${"%.2f".format(calculatedFees)}")
+                        Text("Somme à ajouter pour $selectedProvider : ${"%.2f".format(calculatedFees)}")
+
                     } else {
                         Text("Veuillez entrer un montant valide.")
                     }

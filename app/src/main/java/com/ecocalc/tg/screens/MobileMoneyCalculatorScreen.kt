@@ -17,7 +17,7 @@ fun MobileMoneyCalculatorScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Calcul des Frais Mobile Money") },
+                title = { Text("Calcul Mobile Money") },
                 modifier = Modifier.fillMaxWidth()
             )
         }

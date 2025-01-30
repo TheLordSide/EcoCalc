@@ -21,7 +21,7 @@ fun DepositScreen() {
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
 
-    val banks = listOf("Ecobank", "Orange Bank", "MTN Bank")
+    val banks = listOf("Cartes CORIS CASH")
 
     // Fonction pour calculer les frais
     fun calculateFees(amount: String, bank: String): Double {

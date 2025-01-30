@@ -10,13 +10,13 @@ import com.ecocalc.tg.ui.theme.EcoCalcTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BankFeeCalculatorScreen(modifier: Modifier = Modifier) {
+fun BankFeeCalculatorScreen() {
     listOf("Dépôt")
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Calcul des Frais Bancaires") },
+                title = { Text("Calcul Carte Prépayées") },
                 modifier = Modifier.fillMaxWidth()
             )
         }
