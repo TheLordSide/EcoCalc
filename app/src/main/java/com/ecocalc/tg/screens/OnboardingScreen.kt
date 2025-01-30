@@ -1,17 +1,7 @@
-package com.ecocalc.tg.screens
-
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -20,12 +10,12 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,60 +30,66 @@ import kotlinx.coroutines.launch
 fun OnboardingScreen(onFinish: () -> Unit) {
     val pagerState = rememberPagerState(pageCount = { OnboardingPages.size })
     val scope = rememberCoroutineScope()
+    var isVisible by remember { mutableStateOf(true) } // Gérer la visibilité
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    AnimatedVisibility(
+        visible = isVisible,
+        exit = fadeOut() + slideOutHorizontally(targetOffsetX = { -100 }) // Animation de sortie
     ) {
-        // Bouton en haut à droite
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.End // Aligné à droite
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = {
-                    if (pagerState.currentPage == OnboardingPages.lastIndex) {
-                        onFinish()  // Aller à l’écran principal
-                    } else {
-                        scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
-                    }
-
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-
+            // Bouton en haut à droite
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.End
             ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                    contentDescription = "Suivant"
-                )
+                Button(
+                    onClick = {
+                        if (pagerState.currentPage == OnboardingPages.lastIndex) {
+                            isVisible = false // Déclenche l'animation de sortie
+                            scope.launch {
+                                kotlinx.coroutines.delay(500) // Temps pour l'animation
+                                onFinish()
+                            }
+                        } else {
+                            scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                ) {
+                    Text(if (pagerState.currentPage == OnboardingPages.lastIndex) "Terminer" else "Suivant")
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                        contentDescription = "Suivant"
+                    )
+                }
             }
-        }
 
-        // Contenu principal (Image, titre, description)
-        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
-            OnboardingPageScreen(OnboardingPages[page])
-        }
+            // Contenu principal (Image, titre, description)
+            HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
+                OnboardingPageScreen(OnboardingPages[page])
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Indicateur de pages en bas à gauche
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            PageIndicator(currentPage = pagerState.currentPage, totalPages = OnboardingPages.size)
+            // Indicateur de pages en bas à gauche
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PageIndicator(currentPage = pagerState.currentPage, totalPages = OnboardingPages.size)
+            }
         }
     }
 }
-
-
-
 @Composable
 fun PageIndicator(currentPage: Int, totalPages: Int) {
     Row(
@@ -105,7 +101,7 @@ fun PageIndicator(currentPage: Int, totalPages: Int) {
             Box(
                 modifier = Modifier
                     .size(if (index == currentPage) 12.dp else 8.dp)
-                    .background(if (index == currentPage) Color.Black else Color.Gray, CircleShape)
+                    .background(if (index == currentPage) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary, CircleShape)
             )
         }
     }
@@ -113,18 +109,37 @@ fun PageIndicator(currentPage: Int, totalPages: Int) {
 
 
 @Composable
-fun OnboardingPageScreen(page: OnboardingPage){
+fun OnboardingPageScreen(page: OnboardingPage) {
+    val textColor = MaterialTheme.colorScheme.onBackground // Couleur adaptée au thème
+    val imageTint = MaterialTheme.colorScheme.primary // Ajuste selon ton besoin
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(painter = painterResource(page.image), contentDescription = null)
-        Text(text = page.title, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text(text = page.description, fontSize = 16.sp, textAlign = TextAlign.Center)
+        Image(
+            painter = painterResource(page.image),
+            contentDescription = null,
+            modifier = Modifier.size(200.dp), // Ajuste la taille si nécessaire
+            colorFilter = ColorFilter.tint(imageTint) // Appliquer la teinte au besoin
+        )
+        Text(
+            text = page.title,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = textColor // Couleur du texte dynamique
+        )
+        Text(
+            text = page.description,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            color = textColor, // Adapte la couleur du texte
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
     }
-
 }
+
 
 @Composable
 @Preview
