@@ -10,8 +10,8 @@ import com.ecocalc.tg.ui.theme.EcoCalcTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MobileMoneyCalculatorScreen(modifier: Modifier = Modifier) {
-    var currentTab by remember { mutableStateOf(0) } // 0 pour dépôt, 1 pour retrait
+fun MobileMoneyCalculatorScreen() {
+    var currentTab by remember { mutableIntStateOf(0) } // 0 pour dépôt, 1 pour retrait
     val tabs = listOf("Dépôt", "Retrait")
 
     Scaffold(

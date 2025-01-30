@@ -1,6 +1,6 @@
 package com.ecocalc.tg
 
-import AppNavigation
+import com.ecocalc.tg.navigation.AppNavigation
 import androidx.compose.runtime.Composable
 
 @Composable

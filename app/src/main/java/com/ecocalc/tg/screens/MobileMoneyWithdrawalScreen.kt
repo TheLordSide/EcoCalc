@@ -19,7 +19,7 @@ import com.ecocalc.tg.utils.FeesCalculator // Import de la classe de calcul des 
 fun MobileMoneyWithdrawalScreen() {
     var withdrawalAmount by remember { mutableStateOf("") }
     var selectedProvider by remember { mutableStateOf("Moov Money") }
-    var calculatedFees by remember { mutableStateOf(0.0) }
+    var calculatedFees by remember { mutableDoubleStateOf(0.0) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }

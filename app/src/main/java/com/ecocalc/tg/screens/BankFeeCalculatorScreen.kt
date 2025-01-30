@@ -11,8 +11,7 @@ import com.ecocalc.tg.ui.theme.EcoCalcTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BankFeeCalculatorScreen(modifier: Modifier = Modifier) {
-    var currentTab by remember { mutableStateOf(0) } // 0 pour dépôt, 1 pour retrait
-    val tabs = listOf("Dépôt")
+    listOf("Dépôt")
 
     Scaffold(
         topBar = {
