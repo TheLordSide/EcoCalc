@@ -15,9 +15,7 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.EcoCalc"
-            android:launchMode="singleTask">
-
+            android:theme="@style/SplashTheme">
         </activity>
         <activity
             android:name=".MainActivity"
@@ -28,6 +26,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 
