@@ -61,7 +61,7 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                             scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {
                     Text(if (pagerState.currentPage == OnboardingPages.lastIndex) "Terminer" else "Suivant")
                     Icon(
