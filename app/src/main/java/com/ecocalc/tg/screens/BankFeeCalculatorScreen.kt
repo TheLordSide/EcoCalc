@@ -16,7 +16,7 @@ fun BankFeeCalculatorScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Calcul Carte Prépayées") },
+                title = { Text("Carte Prépayées") },
                 modifier = Modifier.fillMaxWidth()
             )
         }

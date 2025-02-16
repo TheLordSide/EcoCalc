@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,25 +14,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DepositScreen() {
     var depositAmount by remember { mutableStateOf("") }
-    var selectedBank by remember { mutableStateOf("Ecobank") }
+    var selectedBank by remember { mutableStateOf("CORIS BANK-CORIS CASH") }
     var calculatedFees by remember { mutableDoubleStateOf(0.0) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
-
-    val banks = listOf("Cartes CORIS CASH")
-
+    val banks = listOf("CORIS BANK-CORIS CASH","ORABANK-Carte VISA Liberté","ECOBANK-Carte CashXpress Visa")
+    var errorMessage by remember { mutableStateOf("") }
+    var taf: Double
+    var totalFees: Double
     // Fonction pour calculer les frais
     fun calculateFees(amount: String, bank: String): Double {
         val amountAsDouble = amount.toDoubleOrNull() ?: return 0.0
-        return when (bank) {
-            "Ecobank" -> amountAsDouble * 0.02
-            "Orange Bank" -> amountAsDouble * 0.03
-            "MTN Bank" -> amountAsDouble * 0.01
+        var frais = when (bank) {
+            "CORIS BANK-CORIS CASH" -> amountAsDouble * 0.015
+            "ORABANK-Carte VISA Liberté" -> amountAsDouble * 0.015
+            "ECOBANK-Carte CashXpress Visa" -> amountAsDouble * 0.015
             else -> 0.0
         }
+
+        if (frais < 1000.0) {
+            frais = 1000.0
+        }
+
+         taf = frais * 0.1
+         totalFees = frais+taf
+
+        return totalFees
+
     }
 
     Column(
@@ -46,7 +59,18 @@ fun DepositScreen() {
             label = { Text("Montant du dépôt") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp)
+                .padding(vertical = 10.dp),
+            isError = errorMessage.isNotEmpty(),
+            trailingIcon = {
+                if (depositAmount.isNotEmpty()) {
+                    IconButton(onClick = { depositAmount = "" }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Effacer le champs"
+                        )
+                    }
+                }
+            }
         )
 
         ExposedDropdownMenuBox(
@@ -104,7 +128,8 @@ fun DepositScreen() {
                 title = { Text("Résultat") },
                 text = {
                     if (calculatedFees > 0.0) {
-                        Text("Frais pour $selectedBank : ${"%.2f".format(calculatedFees)}")
+                        Text("Le montant total à deposer sera :${"%.2f".format(calculatedFees+depositAmount.toDouble())}")
+                        Text("\n\n\nLes frais pour $selectedBank :${"%.2f".format(calculatedFees)}")
                     } else {
                         Text("Veuillez entrer un montant valide.")
                     }
