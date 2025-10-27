@@ -26,6 +26,7 @@ fun MainScreen(){
         when (selectedScreen) {
             is BottomNavItem.MobileMoney -> MobileMoneyCalculatorScreen()
             is BottomNavItem.BankFees -> BankFeeCalculatorScreen()
+            is BottomNavItem.Withdrawal -> WithdrawalScreen()
             is BottomNavItem.History -> AboutAppScreen(modifier = Modifier.padding(innerPadding))
         }
 

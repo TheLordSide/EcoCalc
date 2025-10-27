@@ -1,11 +1,11 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.ecocalc.tg.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -53,7 +53,7 @@ fun WithdrawalScreen() {
             expanded = isDropdownExpanded,
             onExpandedChange = { isDropdownExpanded = it },
         ) {
-            OutlinedTextField(
+            TextField(
                 value = selectedBank,
                 onValueChange = {},
                 label = { Text("Banque") },
@@ -61,12 +61,8 @@ fun WithdrawalScreen() {
                     .fillMaxWidth()
                     .menuAnchor(),
                 readOnly = true,
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Expand Dropdown"
-                    )
-                }
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpanded) },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
             )
             ExposedDropdownMenu(
                 expanded = isDropdownExpanded,

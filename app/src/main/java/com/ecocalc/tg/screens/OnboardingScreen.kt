@@ -12,6 +12,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,10 +47,11 @@ fun OnboardingScreen(onFinish: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    //  MODIFICATION ICI : ajoutez un padding en haut
+                    .padding(top = 8.dp, bottom = 16.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(
+                TextButton(
                     onClick = {
                         if (pagerState.currentPage == OnboardingPages.lastIndex) {
                             isVisible = false // Déclenche l'animation de sortie
@@ -60,13 +62,16 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                         } else {
                             scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                    }
+
                 ) {
                     Text(if (pagerState.currentPage == OnboardingPages.lastIndex) "Terminer" else "Suivant")
+
+                    Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                        contentDescription = "Suivant"
+                        contentDescription = "Suivant",
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
                     )
                 }
             }
@@ -101,7 +106,10 @@ fun PageIndicator(currentPage: Int, totalPages: Int) {
             Box(
                 modifier = Modifier
                     .size(if (index == currentPage) 12.dp else 8.dp)
-                    .background(if (index == currentPage) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary, CircleShape)
+                    .background(
+                        if (index == currentPage) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+                        CircleShape
+                    )
             )
         }
     }
@@ -121,7 +129,7 @@ fun OnboardingPageScreen(page: OnboardingPage) {
         Image(
             painter = painterResource(page.image),
             contentDescription = null,
-            modifier = Modifier.size(200.dp), // Ajuste la taille si nécessaire
+            modifier = Modifier.size(400.dp), // Ajuste la taille si nécessaire
             colorFilter = ColorFilter.tint(imageTint) // Appliquer la teinte au besoin
         )
         Text(

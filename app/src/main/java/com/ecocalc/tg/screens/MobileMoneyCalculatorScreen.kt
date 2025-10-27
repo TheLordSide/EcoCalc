@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ecocalc.tg.ui.theme.EcoCalcTheme
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MobileMoneyCalculatorScreen() {
@@ -29,7 +28,7 @@ fun MobileMoneyCalculatorScreen() {
                 .padding(16.dp)
         ) {
             // Tabs
-            TabRow(selectedTabIndex = currentTab) {
+            PrimaryTabRow(selectedTabIndex = currentTab) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         selected = currentTab == index,

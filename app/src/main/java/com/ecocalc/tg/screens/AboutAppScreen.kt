@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -56,7 +57,7 @@ fun AboutAppScreen(modifier: Modifier = Modifier) {
                 painter = logoPainter,
                 contentDescription = "Logo de l'application",
                 modifier = Modifier
-                    .padding(bottom = 8.dp),
+                    .size(200.dp),
                 alignment = Alignment.TopCenter,
                 contentScale = ContentScale.FillWidth,
             )

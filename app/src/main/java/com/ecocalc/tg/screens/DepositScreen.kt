@@ -40,12 +40,13 @@ fun DepositScreen() {
             frais = 1000.0
         }
 
-         taf = frais * 0.1
-         totalFees = frais+taf
+        taf = frais * 0.1
+        totalFees = frais+taf
 
         return totalFees
 
     }
+
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -125,11 +126,11 @@ fun DepositScreen() {
         if (isDialogVisible) {
             AlertDialog(
                 onDismissRequest = { isDialogVisible = false },
-                title = { Text("Résultat") },
+                title = { Text("Informations") },
                 text = {
                     if (calculatedFees > 0.0) {
-                        Text("Le montant total à deposer sera :${"%.2f".format(calculatedFees+depositAmount.toDouble())}")
-                        Text("\n\n\nLes frais pour $selectedBank :${"%.2f".format(calculatedFees)}")
+                        Text("\n\n\nLes frais de dépôt pour la carte prépayée $selectedBank, sont de : ${"%.2f".format(calculatedFees)}")
+                        Text("Le montant final à deposer sera de :${"%.2f".format(calculatedFees+depositAmount.toDouble())}")
                     } else {
                         Text("Veuillez entrer un montant valide.")
                     }
