@@ -11,8 +11,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ecocalc.tg.utils.FeesCalculator // Import de la classe de calcul des frais
 
 @Composable
@@ -20,34 +22,32 @@ fun MobileMoneyDepositScreen() {
     var depositAmount by remember { mutableStateOf("") }
     var selectedProvider by remember { mutableStateOf("Moov Money") }
     var calculatedFees by remember { mutableDoubleStateOf(0.0) }
-    var totalDeposit by remember { mutableDoubleStateOf(0.0) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var isDialogVisible by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-
     val providers = listOf("Moov Money", "Mixx by Yas")
+
     val maxAmount = when (selectedProvider) {
         "Moov Money" -> 2000000.0
         "Mixx by Yas" -> 200000.0
         else -> 100000.0
     }
 
-    // Fonction pour calculer les frais et la somme totale à déposer
-    fun calculateFees(amount: String, provider: String): Pair<Double, Double> {
+    // TODO: Adapter la logique de calcul pour les frais de DÉPÔT
+    fun calculateFees(amount: String, provider: String): Double {
         val amountAsDouble = amount.toDoubleOrNull() ?: 0.0
         if (amountAsDouble > maxAmount) {
             errorMessage = "Le montant maximum autorisé pour $selectedProvider est ${maxAmount.toInt()} F CFA."
-            return Pair(0.0, 0.0)
+            return 0.0
         } else {
             errorMessage = ""
         }
-
-        val fees = when (provider) {
+        // NOTE: Utilise pour l'instant la même logique que le retrait. À adapter.
+        return when (provider) {
             "Moov Money" -> FeesCalculator.calculateMoovFees(amount)
             "Mixx by Yas" -> FeesCalculator.calculateMixxFees(amount)
             else -> 0.0
         }
-        return Pair(fees, amountAsDouble + fees)
     }
 
     Column(
@@ -93,7 +93,7 @@ fun MobileMoneyDepositScreen() {
                 label = { Text("Fournisseur") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(),
+                    .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true),
                 readOnly = true,
                 trailingIcon = {
                     Icon(
@@ -122,11 +122,9 @@ fun MobileMoneyDepositScreen() {
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
-            val (fees, total) = calculateFees(depositAmount, selectedProvider)
-            calculatedFees = fees
-            totalDeposit = total
+            calculatedFees = calculateFees(depositAmount, selectedProvider)
             if (errorMessage.isEmpty()) {
-                isDialogVisible = true // Affiche le popup
+                isDialogVisible = true
             }
         }) {
             Text("Calculer les frais")
@@ -137,13 +135,34 @@ fun MobileMoneyDepositScreen() {
         if (isDialogVisible) {
             AlertDialog(
                 onDismissRequest = { isDialogVisible = false },
-                title = { Text("Résultat") },
+                title = { Text("Détails du dépôt") },
                 text = {
-                    if (calculatedFees > 0.0) {
-                        Text(
-                            "Frais pour $selectedProvider : ${"%.2f".format(calculatedFees)}\n" +
-                                    "Total à déposer : ${"%.2f".format(totalDeposit)}"
-                        )
+                     if (calculatedFees > 0.0) {
+                        val amountAsDouble = depositAmount.toDoubleOrNull() ?: 0.0
+                        Column {
+                            Text("Pour un dépôt via $selectedProvider:")
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text("Montant du dépôt : ${ "%.2f".format(amountAsDouble)} FCFA")
+                            Text("Frais estimés : ${ "%.2f".format(calculatedFees)} FCFA")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            HorizontalDivider(
+                                modifier = Modifier,
+                                thickness = DividerDefaults.Thickness,
+                                color = DividerDefaults.color
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Total à prévoir : ${ "%.2f".format(amountAsDouble + calculatedFees)} FCFA",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Montant qui sera crédité : ${ "%.2f".format(amountAsDouble)} FCFA",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        }
                     } else {
                         Text("Veuillez entrer un montant valide.")
                     }

@@ -1,3 +1,5 @@
+package com.ecocalc.tg.screens
+
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,7 +9,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ecocalc.tg.onboarding.OnboardingPage
 import com.ecocalc.tg.onboarding.OnboardingPage.Companion.OnboardingPages
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,7 +58,7 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                         if (pagerState.currentPage == OnboardingPages.lastIndex) {
                             isVisible = false // Déclenche l'animation de sortie
                             scope.launch {
-                                kotlinx.coroutines.delay(500) // Temps pour l'animation
+                                delay(500) // Temps pour l'animation
                                 onFinish()
                             }
                         } else {

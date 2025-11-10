@@ -11,8 +11,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ecocalc.tg.utils.FeesCalculator // Import de la classe de calcul des frais
 
 @Composable
@@ -90,7 +92,7 @@ fun MobileMoneyWithdrawalScreen() {
                 label = { Text("Fournisseur") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(),
+                    .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true),
                 readOnly = true,
                 trailingIcon = {
                     Icon(
@@ -132,11 +134,34 @@ fun MobileMoneyWithdrawalScreen() {
         if (isDialogVisible) {
             AlertDialog(
                 onDismissRequest = { isDialogVisible = false },
-                title = { Text("Résultat") },
+                title = { Text("Détails du retrait") },
                 text = {
-                    if (calculatedFees > 0.0) {
-                        Text("Somme à ajouter pour $selectedProvider : ${"%.2f".format(calculatedFees)}")
-
+                     if (calculatedFees > 0.0) {
+                        val amountAsDouble = withdrawalAmount.toDoubleOrNull() ?: 0.0
+                        Column {
+                            Text("Pour un retrait via $selectedProvider:")
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text("Montant du retrait : ${ "%.2f".format(amountAsDouble)} FCFA")
+                            Text("Frais estimés : ${ "%.2f".format(calculatedFees)} FCFA")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            HorizontalDivider(
+                                modifier = Modifier,
+                                thickness = DividerDefaults.Thickness,
+                                color = DividerDefaults.color
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Total à prévoir : ${ "%.2f".format(amountAsDouble + calculatedFees)} FCFA",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Montant que vous recevrez : ${ "%.2f".format(amountAsDouble - calculatedFees)} FCFA",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        }
                     } else {
                         Text("Veuillez entrer un montant valide.")
                     }

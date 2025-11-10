@@ -87,18 +87,18 @@ fun AboutAppScreen(modifier: Modifier = Modifier) {
                 color = DividerDefaults.color
             )
 
-            Text(
-                text = "Sources",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-            )
-            Text(
-                text = "Moov Money \nOraBank",
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-            )
+//            Text(
+//                text = "Sources",
+//                style = MaterialTheme.typography.titleMedium,
+//                modifier = Modifier.fillMaxWidth(),
+//                textAlign = TextAlign.Start,
+//            )
+//            Text(
+//                text = "Moov Money \nOraBank",
+//                style = MaterialTheme.typography.bodySmall,
+//                modifier = Modifier.fillMaxWidth(),
+//                textAlign = TextAlign.Start,
+//            )
 
         }
     }

@@ -1,6 +1,6 @@
 package com.ecocalc.tg.navigation
 
-import OnboardingScreen
+import com.ecocalc.tg.screens.OnboardingScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
