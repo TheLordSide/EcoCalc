@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import com.ecocalc.tg.navigation.BottomNavItem
 import com.ecocalc.tg.navigation.BottomNavigationBar
 
-
 @Composable
 fun MainScreen(){
 
