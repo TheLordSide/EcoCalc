@@ -8,7 +8,7 @@ sealed class OnboardingPage(
     val description: String
 ) {
     data object Page1 : OnboardingPage(
-        title = "Bienvenue!!!",
+        title = "Bienvenue",
         description = "Decouvrez EcoCalc",
         image = R.drawable.logo_light
 
@@ -16,18 +16,18 @@ sealed class OnboardingPage(
 
     data object Page2 : OnboardingPage(
         title = "Que proposons-nous?",
-        description = "Calculez les frais de tranactions",
+        description = "Calculez les frais de transactions",
         image = R.drawable.logo_light
 
     )
     data object Page3 : OnboardingPage(
-        title = "Que proposons-nous?",
+        title = "",
         description = "Des services de paiement mobile",
         image = R.drawable.mobilemoney
 
     )
     data object Page4 : OnboardingPage(
-        title = "Que proposons-nous?",
+        title = "",
         description = "Des cartes de crédit Prepayées",
         image = R.drawable.prepaid
 

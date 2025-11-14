@@ -74,7 +74,7 @@ fun AboutAppScreen(modifier: Modifier = Modifier) {
                 textAlign = TextAlign.Start,
             )
             Text(
-                text = "0.1.0",
+                text = "1.0.0",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start,
